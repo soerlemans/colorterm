@@ -3,7 +3,7 @@
 Colorstream::Colorstream(ostream& t_stream, const string t_color_fg, const string t_color_bg, Format t_flags)
     :m_stream(t_stream)
 {
-    SetFormat(t_flags); std::cout << "yes2";
+    SetFormat(t_flags);
     SetColor16(t_color_fg, t_color_bg);
 }
 
@@ -17,7 +17,7 @@ Colorstream::Colorstream(ostream& t_stream, const uint8_t  t_color_fg, const uin
 Colorstream::Colorstream(ostream& t_stream, const string t_color_fg, const string t_color_bg, uint8_t t_flags)
     :m_stream(t_stream)
 {
-    SetFormat(t_flags); std::cout << "yes1";
+    SetFormat(t_flags);
     SetColor16(t_color_fg, t_color_bg);
 }
 
@@ -82,8 +82,15 @@ void Colorstream::SetColor16(string t_color_fg, string t_color_bg)
 
 void Colorstream::SetColor255(uint8_t t_color_fg, uint8_t t_color_bg)
 {
-    m_term_set  = foreground + uint2string(t_color_fg) + terminate;
+    m_term_set += foreground + uint2string(t_color_fg) + terminate;
     m_term_set += background + uint2string(t_color_bg) + terminate;
+}
+
+void Colorstream::Print(const string& str)
+{
+
+    m_stream << m_term_set << str << reset;
+
 }
 
 void Colorstream::Clear()
@@ -97,9 +104,37 @@ Colorstream::~Colorstream()
 
 }
 
-std::ostream& Colorstream::operator<<(string str)
+Colorstream& Colorstream::operator<<(string str)
 {
-    m_stream << m_term_set << str << reset;
+    this->Print(str);
+    return (*this);
+}
 
-    return m_stream;
+Colorstream& Colorstream::operator<<(char val)
+{
+    string str;
+    str += val;
+
+    this->Print(str);
+    return (*this);
+}
+
+Colorstream& Colorstream::operator<<(int val)
+{
+    ostringstream oss;
+    oss << val;
+
+    this->Print(oss.str());
+
+    return (*this);
+}
+
+Colorstream& Colorstream::operator<<(double val)
+{
+    ostringstream oss;
+    oss << val;
+
+    this->Print(oss.str());
+
+    return (*this);
 }

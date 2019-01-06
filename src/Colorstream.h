@@ -14,6 +14,7 @@ private:
     ostream& m_stream = std::cout;
     string m_term_set = "";
 
+
 public:
     Colorstream(ostream& t_stream, const string  t_color_fg, const string  t_color_bg, const Format  t_flags);
     Colorstream(ostream& t_stream, const uint8_t t_color_fg, const uint8_t t_color_bg, const Format  t_flags);
@@ -27,11 +28,16 @@ public:
     void SetColor16 (string  t_color_fg = FG::Default,  string  t_color_bg =BG::Default );
     void SetColor255(uint8_t t_color_fg = 0, uint8_t t_color_bg = 0);
 
+    void Print(const string& str);
+
     void Clear();
 
     ~Colorstream();
 
-    std::ostream& operator<<(string str);
+    Colorstream& operator<<(string str);
+    Colorstream& operator<<(char   val);
+    Colorstream& operator<<(int    val);
+    Colorstream& operator<<(double val);
 
 };
 
